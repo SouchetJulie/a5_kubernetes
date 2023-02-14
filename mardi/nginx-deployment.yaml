@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment # base name for the ReplicaSet and pods
+  labels:
+    app: nginx # same label so the ReplicaSet can find the pods
+
+spec:
+  # ReplicaSet: defines the number of pods to run
+  replicas: 2 # optional (default: 1)
+  selector: # required, helps define which pods are targeted
+    matchLabels:
+      app: nginx # same label so the ReplicaSet can find the pods
+
+  # Pod template: defines how to build the pods
+  template: # required
+    metadata:
+      labels:
+        app: nginx # same label so the ReplicaSet can find the pods
+    spec:
+      # The containers inside the pods
+      containers:
+        - name: nginx
+          image: nginx:1.23.3
+          ports:
+            - containerPort: 80

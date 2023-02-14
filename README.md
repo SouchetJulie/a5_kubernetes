@@ -43,6 +43,11 @@ Il faut d'abord [écrire un manifest](https://kubernetes.io/docs/concepts/worklo
 kubectl apply -f practice-1/nginx-deployment.yaml
 ```
 
+N.B. : On peut créer le manifest depuis le CLI, sans créer le déploiement, avec : (merci @YannyOuzid)
+```bash
+kubectl create deployment nginx --image=nginx:latest --dry-run=client -o yaml > nginx-deployment.yaml
+```
+
 Regarder le résultat :
 ```bash
 kubectl get deploy
@@ -61,7 +66,7 @@ Expose une application à l'extérieur du cluster, a son propre IP ([docs](https
 
 Depuis la CLI :
 ```bash
-kubectl expose deployment nginx --port=80 --type=NodePort
+kubectl expose deployment nginx-deployment --port=80 --type=NodePort
 ```
 Le type détermine comment le service est exposé :
 - ClusterIP : accessible uniquement depuis l'intérieur du cluster
@@ -79,6 +84,13 @@ Depuis un manifest : (docs)
 ```bash
 kubectl apply -f practice-1/nginx-service.yaml
 ```
+
+Puis on forward le port du service vers la machine locale :
+```bash
+kubectl port-forward service/nginx-service 8080:80
+```
+
+On peut maintenant y accéder depuis `localhost:8080` tant que le port-forwarding est actif :)
 
 N.B. : Pour le sens inverse (accéder à des services externes depuis l'intérieur du cluster), on peut utiliser un [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: nginx-deployment # base name for the ReplicaSet and pods
   labels:
-    app: nginx # same label so the ReplicaSet can find the pods
+    app: nginx # same label as the ReplicaSet (required)
 
 spec:
   # ReplicaSet: defines the number of pods to run

@@ -22,20 +22,22 @@ Cf. [tuto](https://kubernetes.io/docs/tutorials/hello-minikube/)
 
 N.B. : On peut utiliser des raccourcis pour les commandes kubectl : `po` pour `pods`, `rs` pour `replicaset`, `deploy` pour `deployment`, etc.
 
+On peut aussi ajouter un alias bash tel que `alias k=kubectl` pour simplifier encore plus.
 
-## Mardi
+
+## Mardi matin
 
 ### Créer un déploiement à partir d'un manifest
 - Créer à partir de la CLI :
 ```bash
-kubectl create deployment nginx --image=nginx
+kubectl create deploy nginx --image=nginx
 ```
 Regarder le résultat :
 ```bash
-kubectl get deployments
-kubectl get pods
-kubectl describe pods
-kubectl describe deployments nginx
+kubectl get deploy
+kubectl get po
+kubectl describe po
+kubectl describe deploy nginx
 ```
 - Créer à partir d'un manifest :
 Il faut d'abord [écrire un manifest](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#writing-a-deployment-spec) (= fichier yaml décrivant la structure souhaitée du déploiement), puis l'appliquer :
@@ -66,7 +68,7 @@ Expose une application à l'extérieur du cluster, a son propre IP ([docs](https
 
 Depuis la CLI :
 ```bash
-kubectl expose deployment nginx-deployment --port=80 --type=NodePort
+kubectl expose deploy nginx-deployment --port=80 --type=NodePort
 ```
 Le type détermine comment le service est exposé :
 - ClusterIP : accessible uniquement depuis l'intérieur du cluster
@@ -85,7 +87,7 @@ Depuis un manifest : (docs)
 kubectl apply -f practice-1/nginx-service.yaml
 ```
 
-Puis on forward le port du service vers la machine locale :
+⚠️ Ne pas oublier d'activer le port forwarding vers la machine locale (sinon le service ne reste accessible que depuis le cluster avec type=ClusterIP) :
 ```bash
 kubectl port-forward service/nginx-service 8080:80
 ```
@@ -95,5 +97,24 @@ On peut maintenant y accéder depuis `localhost:8080` tant que le port-forwardin
 N.B. : Pour le sens inverse (accéder à des services externes depuis l'intérieur du cluster), on peut utiliser un [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 
 
-### EndpointSlices
-Permet de suivre les endpoints réseaux ([docs](https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/))
+
+## Mardi après-midi
+
+Construction d'un cluster multi-tier (front + back) avec Kubernetes.
+
+Cf. [tuto](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/)
+
+Pour créer les namespaces :
+```bash
+./practice-2/bin/create_guestbook_ns.sh
+```
+
+Pour déployer les différentes pods :
+```bash
+./practice-2/bin/deploy_guestbook.sh
+```
+
+Une fois fini, on peut nettoyer avec :
+```bash
+./practice-2/bin/clean_guestbook.sh
+```

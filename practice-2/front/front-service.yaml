@@ -1,0 +1,18 @@
+# SOURCE: https://cloud.google.com/kubernetes-engine/docs/tutorials/guestbook
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: front
+  name: frontend
+  labels:
+    app: guestbook
+    tier: frontend
+
+spec:
+  ports:
+    # the port that this service should serve on (in the cluster still)
+  - port: 80
+  selector:
+    app: guestbook
+    tier: frontend

@@ -198,5 +198,8 @@ Nettoyage :
 ```bash
 kubectl delete deploy,svc,pvc,pv -l app=mysql
 minikube ssh
+```
+Puis, dans le shell de minikube :
+```bash
 sudo rm -rf /mnt/data
 ```

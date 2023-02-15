@@ -1,0 +1,34 @@
+# 1Gi volume, will be claimed by 500Mi PVC
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-practice-pv
+  labels:
+    td: pv
+
+spec:
+    storageClassName: manual
+    capacity:
+        storage: 1Gi
+    accessModes:
+        - ReadWriteOnce
+    hostPath:
+        path: /mnt/data
+
+---
+# 1Mi volume, will NOT be claimed because too small
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-practice-pv-tiny
+  labels:
+    td: pv
+
+spec:
+    storageClassName: manual
+    capacity:
+        storage: 1Mi
+    accessModes:
+        - ReadWriteOnce
+    hostPath:
+        path: /mnt/data

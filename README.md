@@ -118,3 +118,59 @@ Une fois fini, on peut nettoyer avec :
 ```bash
 ./practice-2/bin/clean_guestbook.sh
 ```
+
+## Mercredi matin
+
+### Volumes
+Permettent de stocker des données persistantes, en dehors des pods.
+
+Le storageClassName permet de déterminer de quel type de volume il s'agit (local, dans le cloud, etc.).
+On peut configurer les droits d'accès, la taille, etc.
+
+Créer deux volumes de 1Gi et 1Mi respectivement :
+```bash
+kubectl apply -f practice-3/tuto/pv.yaml
+```
+Regarder le résultat :
+```bash
+kubectl get pv
+```
+Créer un volume claim de 500Mi :
+```bash
+kubectl apply -f practice-3/tuto/pvc.yaml
+```
+Regarder le résultat :
+```bash
+kubectl get pv
+kubectl get pvc
+```
+On voit que c'est le volume de 1Gi qui a été utilisé, car c'est le seul qui est suffisamment grand.
+
+On peut ensuite l'utiliser dans le pod qu'on veut.
+Par exemple, on peut créer un pod qui utilise ce volume :
+```bash
+kubectl apply -f practice-3/tuto/pod.yaml
+```
+
+Puis, on vérifie que le volume est bien monté dans le pod :
+```bash
+kubectl exec -it pod-practice-pv -- sh
+```
+Dans le shell :
+```bash
+apt update
+apt install curl
+curl http://localhost/
+```
+On voit que le contenu du volume est bien affiché.
+
+Nettoyage : (L'ordre est important ! Si on essaie de supprimer un volume qui est encore utilisé, il restera en "terminating" indéfiniment.) 
+```bash
+kubectl delete pod -l td=pv
+kubectl delete pvc -l td=pv
+kubectl delete pv -l td=pv
+```
+Dans le shell de minikube (`minikube ssh`) :
+```bash
+sudo rm -rf /mnt/data
+```

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-practice-pv
+  labels:
+    td: pv
+
+spec:
+  # We define here which volume _claims_ this pod will use
+  volumes:
+    - name: pvc-practice-pv
+      persistentVolumeClaim:
+        claimName: pv-claim-practice-pv # same name as the PVC
+  containers:
+    - name: container-practice-pv
+      image: nginx
+      volumeMounts:
+        - name: pvc-practice-pv # the same name as defined above in volumes.name
+          mountPath: /usr/share/nginx/html # the path used by the nginx image
+      ports:
+        - containerPort: 80

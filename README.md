@@ -178,7 +178,7 @@ sudo rm -rf /mnt/data
 ### Une application avec MySQL
 On définit un secret pour le mot de passe de l'utilisateur root :
 ```bash
-kubectl create secret generic mysql-pass --from-literal=password=secret
+kubectl create secret generic mysql-pass --from-literal=password='AVerySecurePassword!123'
 ```
 
 Déployer les pv, pvc et le déploiement de MySQL :

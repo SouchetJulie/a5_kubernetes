@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-client
+  labels:
+    app: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+      type: client
+  template:
+    metadata:
+      labels:
+        app: mysql
+        type: client
+    spec:
+      containers:
+        - name: mysql-client
+          image: mysql:5.6
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom: # get the password from the secret
+                secretKeyRef:
+                  name: mysql-pass
+                  key: password
+            - name: MYSQL_HOST
+              value: mysql

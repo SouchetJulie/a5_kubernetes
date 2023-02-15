@@ -129,7 +129,7 @@ On peut configurer les droits d'accès, la taille, etc.
 
 Créer deux volumes de 1Gi et 1Mi respectivement :
 ```bash
-kubectl apply -f practice-3/tuto/pv.yaml
+kubectl apply -f practice-3/tuto-pv/pv.yaml
 ```
 Regarder le résultat :
 ```bash
@@ -137,7 +137,7 @@ kubectl get pv
 ```
 Créer un volume claim de 500Mi :
 ```bash
-kubectl apply -f practice-3/tuto/pvc.yaml
+kubectl apply -f practice-3/tuto-pv/pvc.yaml
 ```
 Regarder le résultat :
 ```bash
@@ -149,7 +149,7 @@ On voit que c'est le volume de 1Gi qui a été utilisé, car c'est le seul qui e
 On peut ensuite l'utiliser dans le pod qu'on veut.
 Par exemple, on peut créer un pod qui utilise ce volume :
 ```bash
-kubectl apply -f practice-3/tuto/pod.yaml
+kubectl apply -f practice-3/tuto-pv/pod.yaml
 ```
 
 Puis, on vérifie que le volume est bien monté dans le pod :
@@ -172,5 +172,31 @@ kubectl delete pv -l td=pv
 ```
 Dans le shell de minikube (`minikube ssh`) :
 ```bash
+sudo rm -rf /mnt/data
+```
+
+### Une application avec MySQL
+On définit un secret pour le mot de passe de l'utilisateur root :
+```bash
+kubectl create secret generic mysql-pass --from-literal=password=secret
+```
+
+Déployer les pv, pvc et le déploiement de MySQL :
+```bash
+kubectl apply -f practice-3/stateful/mysql-pv.yaml -f practice-3/stateful/mysql-deploy.yaml
+```
+Une fois que le déploiement est prêt (vérifier avec `kubectl get po`), on crée un déploiement avec un client MySQL :
+```bash
+kubectl apply -f practice-3/stateful/mysql-client-deploy.yaml
+```
+On peut ensuite se connecter au client :
+```bash
+kubectl exec -it <nom_du_pod> -- sh
+```
+
+Nettoyage :
+```bash
+kubectl delete deploy,svc,pvc,pv -l app=mysql
+minikube ssh
 sudo rm -rf /mnt/data
 ```
